@@ -98,7 +98,7 @@ router.post("/", auth, async (req, res) => {
       merchant_urls: {
         terms: "https://www.example.com/terms.html",
         checkout: "https://www.example.com/checkout.html",
-        confirmation: config.get("domain") + "/user",
+        confirmation: config.get("client") + "/user",
         push: "https://www.example.com/api/push",
       },
     });
