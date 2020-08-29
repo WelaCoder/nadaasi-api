@@ -1,0 +1,10 @@
+{
+  "MongoURL": "mongodb+srv://dbUser:dbUser@cluster0-zofxz.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtsecret": "pakistan",
+  "clientId": "9967d4adecc15d39d8fd",
+  "clientSecret": "8d7c3d7ca73b80ffeefe0e8956357917b9f4fc18",
+  "domain": "http://localhost:3000",
+  "api": "http://localhost:5000",
+  "klarnaUsername": "PK06420_1338d8456309",
+  "klarnaPassword": "jxgy2sGZnnLR7cuu"
+}
