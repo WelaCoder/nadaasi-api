@@ -11,7 +11,7 @@ app.get("/uploads/:file", (req, res) => {
   res.sendFile(__dirname + "/client/public/uploads/" + req.params.file);
 });
 app.get("/payment", (req, res) => {
-  fs.writeFile("mynewfile3.html", req.body.html, function (err) {
+  fs.writeFile("mynewfile3.html", "req.body.html", function (err) {
     if (err) throw err;
     console.log("Saved!");
   });
