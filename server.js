@@ -4,8 +4,8 @@ var fs = require("fs");
 var cors = require("cors");
 const connectDB = require("./config/db");
 
-const PORT = process.env.PORT || 6000;
-app.use(cors());
+const PORT = process.env.PORT || 3001;
+// app.use(cors());
 connectDB();
 app.get("/uploads/:file", (req, res) => {
   res.sendFile(__dirname + "/client/public/uploads/" + req.params.file);
