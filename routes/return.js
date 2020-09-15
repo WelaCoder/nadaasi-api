@@ -36,7 +36,8 @@ router.get('/', auth, verify.isAdmin, async (req, res) => {
 });
 router.patch('/:rqid', auth, verify.isAdmin, async (req, res) => {
     try {
-        const merchantReturn = await MerchantReturn.findByIdAndUpdate(req.params.rqid, { $set: req.body }, { new: true });
+        console.log(req.body);
+        const merchantReturn = await MerchantReturn.findByIdAndUpdate(req.params.rqid, { $set: req.body }, { new: req.body.isResolved });
         res.json(merchantReturn);
     } catch (error) {
         console.error(error);
