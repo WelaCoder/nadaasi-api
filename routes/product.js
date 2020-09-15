@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const upload = require("../upload");
 const Product = require("../model/Product");
-
+const auth = require("../middleware/auth");
+const verify = require("../middleware/verify");
 router.post("/", upload.array("images", 3), async (req, res) => {
   try {
     var images = [];
@@ -40,6 +41,18 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+router.put("/:id", auth, verify.isAdmin, async (req, res) => {
+  try {
+    let product = await Product.findById(req.params.id);
+    product.inStock = req.body.inStock;
+    await product.save();
+
+    res.json({ product });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Server error");
   }
 });
 module.exports = router;

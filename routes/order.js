@@ -7,6 +7,7 @@ const Order = require("../model/Order");
 const auth = require("../middleware/auth");
 const Review = require("../model/Review");
 const User = require("../model/User");
+const verify = require("../middleware/verify");
 
 // router.post("/", upload.array("images", 3), async (req, res) => {
 //   try {
@@ -68,9 +69,8 @@ router.get("/", auth, async (req, res) => {
               let inviter = await User.findById(user.inviter._id);
               inviter.balance += 20;
               inviter.activities.push({
-                text: `Your friend ${
-                  user.firstname + " " + user.lastname
-                } made his first purchase and you received 20€.`,
+                text: `Your friend ${user.firstname + " " + user.lastname
+                  } made his first purchase and you received 20€.`,
               });
               await inviter.save();
               user.inviter.rewarded = true;
@@ -92,6 +92,15 @@ router.get("/", auth, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+router.get("/admin", auth, verify.isAdmin, async (req, res) => {
+  try {
+    const order = await Order.find();
+    res.json(order);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Server error");
   }
 });
 router.get("/:id", auth, async (req, res) => {
@@ -156,6 +165,29 @@ router.post("/:id/rateProduct/:productId", auth, async (req, res) => {
     // console.log(order);
     // console.log(placedOrders);
     res.json({ order });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+router.get("/:id/captureOrder", auth, verify.isAdmin, async (req, res) => {
+  try {
+    const client = new KlarnaV3({
+      testDrive: true,
+      username: config.get("klarnaUsername"),
+      password: config.get("klarnaPassword"),
+    });
+    let order = await Order.findById(req.params.id);
+    if (order.status == "Awaiting") {
+      let { success } = await client.captureOrder(order.orderId);
+      if (success) {
+        order.status = "Shipped"
+        await order.save();
+      }
+    }
+    console.log(order);
+    // console.log(placedOrders);
+    res.json(order);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });

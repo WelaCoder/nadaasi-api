@@ -21,6 +21,7 @@ router.post(
     check("password", "Password is required").isLength({ min: 6 }),
   ],
   async (req, res) => {
+    console.log(req.body);
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(400).json({
@@ -51,16 +52,14 @@ router.post(
         let inviter = await User.find({ inviteCode: inviteCode });
         let activites = [
           {
-            text: `You registered with ${
-              inviter.firstname + " " + inviter.lastname + "'s"
-            } invite code and received a 20% discount voucher.`,
+            text: `You registered with ${inviter.firstname + " " + inviter.lastname + "'s"
+              } invite code and received a 20% discount voucher.`,
           },
         ];
         console.log(inviter);
         inviter[0].activities.push({
-          text: `Your friend ${
-            firstname + " " + lastname
-          } registered with your invite code and received a 20% discount voucher.`,
+          text: `Your friend ${firstname + " " + lastname
+            } registered with your invite code and received a 20% discount voucher.`,
         });
         user = new User({
           firstname,
