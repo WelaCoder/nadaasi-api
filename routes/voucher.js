@@ -2,6 +2,7 @@ const router = require("express").Router();
 const upload = require("../upload");
 const User = require("../model/User");
 const auth = require("../middleware/auth");
+const Coupon = require("../model/Coupon");
 
 router.post("/applyCoupon/", auth, async (req, res) => {
   try {
@@ -20,8 +21,20 @@ router.post("/applyCoupon/", auth, async (req, res) => {
     if (coupon) {
       user.appliedCoupon = { ...coupon, id };
       await user.save();
+    } else {
+      coupon = await Coupon.findOne({ code: req.body.code });
+      console.log(coupon);
+      user.appliedCoupon = {
+        isActive: coupon.isActive,
+        name: coupon.name,
+        code: coupon.code,
+        discount: coupon.discount,
+        discountType: coupon.discountType,
+        id: null
+      };
+      await user.save();
     }
-    console.log(coupon);
+    // console.log(coupon);
     res.json({ coupon });
   } catch (error) {
     console.log(error);

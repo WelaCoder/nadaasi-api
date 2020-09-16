@@ -28,8 +28,7 @@ router.post("/", auth, async (req, res) => {
     let lines = cart.map((c) => {
       totalAmount +=
         Number(c.quantity) *
-        (Number(c.product.price) * 100 +
-          Number(c.product.price) * 100 * (24 / 100));
+        (Number(c.product.price) * 100);
       return c;
     });
     if (req.body.useBalance) {
@@ -43,21 +42,39 @@ router.post("/", auth, async (req, res) => {
       }
     } else if (req.body.appliedCoupon) {
       if (user.appliedCoupon.isActive) {
-        switch (user.appliedCoupon.discountType) {
-          case "pi":
-            cart.map((c) => {
-              discountAmount +=
-                Number(c.quantity) *
-                (Number(c.product.price) *
-                  (user.appliedCoupon.discount / 100)) *
-                100;
-              return c;
-            });
-            break;
+        discountAmount = 0;
+        let appliedCoupon = user.appliedCoupon;
+        let units = 0;
+        for (let index = 0; index < cart.length; index++) {
+          const cartProduct = cart[index];
+          units += cartProduct.quantity;
+        }
+        switch (appliedCoupon.discountType) {
+          case 'di':
 
+            discountAmount = units * appliedCoupon.discount;
+            break;
+          case 'pi':
+            discountAmount = 0;
+            for (let index = 0; index < cart.length; index++) {
+              const cartProduct = cart[index];
+              discountAmount += (cartProduct.details.price * appliedCoupon.discount / 100) * cartProduct.quantity
+            }
+            break;
+          case 'fs':
+            discountAmount = 0;
+            shippingCost = 0;
+            break;
+          case 'dst':
+          case 'dt':
+            discountAmount = appliedCoupon.discount;
+            break;
           default:
+            discountAmount = 0;
             break;
         }
+        discountAmount = discountAmount * 100;
+
         console.log(discountAmount);
       }
     }

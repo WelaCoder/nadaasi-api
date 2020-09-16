@@ -7,5 +7,6 @@
   "client": "https://nadaasi-client.herokuapp.com",
   "api": "http://localhost:5000",
   "klarnaUsername": "PK06420_1338d8456309",
-  "klarnaPassword": "jxgy2sGZnnLR7cuu"
+  "klarnaPassword": "jxgy2sGZnnLR7cuu",
+  "testDrive": false
 }

@@ -14,6 +14,9 @@ const UserSchema = new mongoose.Schema({
     default: 0,
   },
   appliedCoupon: {
+    name: {
+      type: String,
+    },
     code: {
       type: String,
     },
@@ -27,6 +30,9 @@ const UserSchema = new mongoose.Schema({
       type: String,
     },
     discount: {
+      type: Number,
+    },
+    amount: {
       type: Number,
     },
     isActive: {
