@@ -55,4 +55,13 @@ router.put("/:id", auth, verify.isAdmin, async (req, res) => {
     return res.status(500).send("Server error");
   }
 });
+router.get("/:id", auth, verify.isAdmin, async (req, res) => {
+  try {
+    let product = await Product.findById(req.params.id);
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Server error");
+  }
+});
 module.exports = router;
