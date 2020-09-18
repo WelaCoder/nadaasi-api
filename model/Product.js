@@ -24,7 +24,7 @@ const ProductSchema = new mongoose.Schema({
     },
   ],
   price: {
-    type: String,
+    type: Number,
     required: true,
   },
   dressType: {
@@ -81,6 +81,14 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  originalPrice: {
+    type: Number,
+  },
+  sale: {
+    type: Boolean,
+    default: false,
+  },
+
   inStock: {
     type: Boolean,
     default: true,

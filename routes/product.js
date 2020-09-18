@@ -1,16 +1,22 @@
 const router = require("express").Router();
 const upload = require("../upload");
 const Product = require("../model/Product");
+const DressType = require("../model/DressType");
 const auth = require("../middleware/auth");
 const verify = require("../middleware/verify");
 router.post("/", upload.array("images", 3), async (req, res) => {
   try {
+    var dressType = await DressType.findOne({ value: req.body.dressType });
+    console.log(dressType);
+    if (dressType == null) {
+      await DressType.create({ label: req.body.dressType, value: req.body.dressType })
+    }
     var images = [];
     for (let index = 0; index < req.files.length; index++) {
       const element = req.files[index].filename;
       images.push(element);
     }
-    console.log(req.body);
+    // console.log(req.body);
     product = await Product.create({
       images: images,
       modelHeightSize: req.body.modelHeightSize,
@@ -22,6 +28,7 @@ router.post("/", upload.array("images", 3), async (req, res) => {
       closure: req.body.closure,
       dressType: req.body.dressType,
       price: req.body.price,
+      originalPrice: req.body.price,
       name: req.body.name,
       dressColor: req.body.color.split(","),
       dressSize: req.body.size.split(","),

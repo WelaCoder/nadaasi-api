@@ -33,7 +33,7 @@ const OrderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "Awaiting",
+    default: "Accepted",
   },
   town: {
     type: String,

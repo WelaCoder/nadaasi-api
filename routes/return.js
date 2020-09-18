@@ -8,13 +8,14 @@ const auth = require('../middleware/auth')
 const check = require('../middleware/check')
 
 router.post('/', auth, check.notAdmin, async (req, res) => {
-    const { name, orderId, email, problem } = req.body;
+    const { name, orderId, email, problem, phone } = req.body;
     try {
         const merchantreturn = new MerchantReturn({
             name,
             orderId,
             email,
-            problem
+            problem,
+            phone
         })
 
         await merchantreturn.save();

@@ -64,6 +64,9 @@ router.get("/", auth, async (req, res) => {
           const { acknowledgeOrderSuccess } = await client.acknowledgeOrder(
             element.orderId
           );
+          const captureOrder = await client.captureOrder(
+            element.orderId
+          );
           if (user.inviter._id) {
             if (!user.inviter.rewarded) {
               let inviter = await User.findById(user.inviter._id);
@@ -170,23 +173,14 @@ router.post("/:id/rateProduct/:productId", auth, async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-router.get("/:id/captureOrder", auth, verify.isAdmin, async (req, res) => {
+router.post("/:id/captureOrder", auth, verify.isAdmin, async (req, res) => {
   try {
-    const client = new KlarnaV3({
-      testDrive: true,
-      username: config.get("klarnaUsername"),
-      password: config.get("klarnaPassword"),
-    });
+
     let order = await Order.findById(req.params.id);
-    if (order.status == "Awaiting") {
-      let { success } = await client.captureOrder(order.orderId);
-      if (success) {
-        order.status = "Shipped"
-        await order.save();
-      }
-    }
-    console.log(order);
-    // console.log(placedOrders);
+
+    order.status = req.body.status
+    await order.save();
+
     res.json(order);
   } catch (error) {
     console.log(error);

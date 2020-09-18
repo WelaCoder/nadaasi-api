@@ -3,6 +3,7 @@ const upload = require("../upload");
 const User = require("../model/User");
 const auth = require("../middleware/auth");
 const Coupon = require("../model/Coupon");
+const couponCodeGenerator = require("../utils/couponCodeGenerator");
 
 router.post("/applyCoupon/", auth, async (req, res) => {
   try {
@@ -41,4 +42,34 @@ router.post("/applyCoupon/", auth, async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+router.get("/", auth, async (req, res) => {
+  try {
+    let user = await User.findById(req.user.id);
+    if (user.points >= 3) {
+      user.vouchers.push({
+        code: couponCodeGenerator(),
+        discount: 100,
+        used: false,
+        isActive: true,
+        discountType: "dt",
+      });
+      user.activities.push({
+        text: `You received a 100€ discount voucher.`,
+      });
+      user.points = user.points - 3;
+    } else {
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+
 module.exports = router;

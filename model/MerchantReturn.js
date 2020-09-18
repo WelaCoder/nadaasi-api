@@ -2,20 +2,23 @@ const mongoose = require('mongoose');
 
 const MerchantReturnSchema = new mongoose.Schema({
     name: {
-        type : String,
+        type: String,
     },
     orderId: {
-        type : String,
+        type: String,
     },
     email: {
-        type : String,
+        type: String,
     },
     problem: {
-        type : String,
+        type: String,
+    },
+    phone: {
+        type: String,
     },
     isResolved: {
         type: Boolean,
-        default : false
+        default: false
     }
 });
 

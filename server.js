@@ -32,6 +32,7 @@ app.use("/api/voucher", require("./routes/voucher"));
 app.use("/api/coupon", require("./routes/coupon"));
 app.use('/api/feedback', require('./routes/feedback'));
 app.use('/api/merchantreturn', require('./routes/return'))
+app.use('/api/dressType', require('./routes/dressType'))
 
 app.listen(PORT, () => {
   console.log(`Your Server is runing on ${PORT} post `);

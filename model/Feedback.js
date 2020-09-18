@@ -14,6 +14,9 @@ const feedbackSchema = mongoose.Schema({
     message: {
         type: String
     },
+    phone: {
+        type: String,
+    },
     isResolved: {
         type: Boolean,
         default: false

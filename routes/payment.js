@@ -16,7 +16,7 @@ router.post("/", auth, async (req, res) => {
     let cart = await CartItem.find({ user: req.user.id }).populate("product");
     let shipping = await Shipping.find({});
     let user = await User.findById(req.user.id);
-    console.log(user.appliedCoupon);
+    // console.log(user.appliedCoupon);
     let discountAmount = 0;
     let units = 0;
     shipping = shipping[0];
@@ -76,6 +76,17 @@ router.post("/", auth, async (req, res) => {
         discountAmount = discountAmount * 100;
 
         console.log(discountAmount);
+      }
+    } else if (req.body.usePoints) {
+      let units = 0;
+      for (let index = 0; index < cart.length; index++) {
+        const cartProduct = cart[index];
+        units += cartProduct.quantity;
+      }
+      if ((units * 5) <= user.points) {
+        discountAmount = totalAmount
+      } else {
+        return console.log('balance not enough');
       }
     }
     // console.log(discountAmount);

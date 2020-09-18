@@ -33,6 +33,13 @@ const CartItemSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    originalPrice: {
+      type: Number,
+    },
+    sale: {
+      type: Boolean,
+      default: false,
+    },
     dressSize: [
       {
         type: String,

@@ -8,10 +8,10 @@ const verify = require('../middleware/verify');
 const check = require('../middleware/check')
 
 
-router.post('/',auth , check.notAdmin, async (req, res) => {
-    const { name, subject, email, message } = req.body;
+router.post('/', auth, check.notAdmin, async (req, res) => {
+    const { name, subject, email, message, phone } = req.body;
     try {
-        const feedback = new Feedback({ name, subject, email, message });
+        const feedback = new Feedback({ name, subject, email, message, phone });
         await feedback.save();
         res.json(feedback);
     } catch (error) {
@@ -19,9 +19,9 @@ router.post('/',auth , check.notAdmin, async (req, res) => {
         return res.status(500).send('Server error');
     }
 });
-router.get('/', auth ,verify.isAdmin, async (req, res) => {
+router.get('/', auth, verify.isAdmin, async (req, res) => {
     try {
-        const feedback = await Feedback.find().sort({date : -1});
+        const feedback = await Feedback.find().sort({ date: -1 });
         res.json(feedback);
     } catch (error) {
         console.error(error);
@@ -37,7 +37,7 @@ router.get('/', auth ,verify.isAdmin, async (req, res) => {
 //         return res.status(500).send('Server error');
 //     }
 // });
-router.patch('/:fid', auth , verify.isAdmin , async(req, res) => {
+router.patch('/:fid', auth, verify.isAdmin, async (req, res) => {
     try {
         const feedback = await Feedback.findByIdAndUpdate(req.params.fid, { $set: req.body }, { new: true });
         res.json(feedback);
