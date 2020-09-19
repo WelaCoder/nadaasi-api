@@ -7,6 +7,7 @@ const auth = require("../middleware/auth");
 
 router.post("/", upload.array("images", 3), auth, async (req, res) => {
   try {
+    console.log(req.body);
     var images = [];
     let product = await Product.findById(req.body._id);
     let cartItem = await CartItem.create({
@@ -15,6 +16,7 @@ router.post("/", upload.array("images", 3), auth, async (req, res) => {
       size: req.body.size,
       product,
       details: product,
+      unit: (req.body.unit),
       quantity: Number(req.body.quantity),
       neck: Number(req.body.neck),
       overBust: Number(req.body.overBust),

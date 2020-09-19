@@ -99,7 +99,7 @@ router.get("/", auth, async (req, res) => {
 });
 router.get("/admin", auth, verify.isAdmin, async (req, res) => {
   try {
-    const order = await Order.find();
+    const order = await Order.find().sort({ date: -1 });
     res.json(order);
   } catch (error) {
     console.error(error);
