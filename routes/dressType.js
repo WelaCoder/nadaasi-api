@@ -10,7 +10,7 @@ const Product = require('../model/Product');
 
 
 
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const dresstype = await DressType.find().sort({ date: -1 });
         res.json(dresstype);
