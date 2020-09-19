@@ -29,6 +29,8 @@ router.post(
       });
     }
     const { firstname, lastname, inviteCode, email, password } = req.body;
+    let code = couponCodeGenerator();
+    console.log(code);
     let user;
     try {
       // finding exsisting USers
@@ -72,6 +74,7 @@ router.post(
           },
           activites,
           password,
+          inviteCode: code,
         });
         await inviter[0].save();
       } else {
@@ -80,6 +83,7 @@ router.post(
           lastname,
           email,
           password,
+          inviteCode: code,
         });
       }
       console.log("object");

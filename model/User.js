@@ -96,8 +96,8 @@ const UserSchema = new mongoose.Schema({
   },
   inviteCode: {
     type: String,
-    default: coupon(),
-    unique: true,
+
+    // unique: true,
   },
   password: {
     type: String,
