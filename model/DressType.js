@@ -15,6 +15,9 @@ const dressTypeSchema = mongoose.Schema({
     discount: {
         type: Number,
     },
+    discountType: {
+        type: String,
+    },
 
     date: {
         type: Date,

@@ -28,9 +28,16 @@ router.put('/', auth, async (req, res) => {
         if (req.body.sale) {
             for (let index = 0; index < products.length; index++) {
                 const product = products[index];
-                product.sale = req.body.sale;
-                product.originalPrice = Number(product.price);
-                product.price = Number(product.price - (product.price * Number(req.body.discount) / 100));
+                if (req.body.discountType == "Amount") {
+                    product.sale = req.body.sale;
+                    product.originalPrice = Number(product.price);
+                    product.price = Number(product.price - (Number(req.body.discount)));
+
+                } else {
+                    product.sale = req.body.sale;
+                    product.originalPrice = Number(product.price);
+                    product.price = Number(product.price - (product.price * Number(req.body.discount) / 100));
+                }
                 await product.save();
             }
             console.log(products);
