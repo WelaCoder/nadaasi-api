@@ -32,7 +32,6 @@ router.put('/', auth, async (req, res) => {
                     product.sale = req.body.sale;
                     product.originalPrice = Number(product.price);
                     product.price = Number(product.price - (Number(req.body.discount)));
-
                 } else {
                     product.sale = req.body.sale;
                     product.originalPrice = Number(product.price);
