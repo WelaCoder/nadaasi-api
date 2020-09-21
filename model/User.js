@@ -114,6 +114,10 @@ const UserSchema = new mongoose.Schema({
   admin: {
     type: Boolean,
     default: false
+  },
+  isActive: {
+    type: Boolean,
+    default: false
   }
 });
 

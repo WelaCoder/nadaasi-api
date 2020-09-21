@@ -46,11 +46,62 @@ router.post("/", upload.array("images", 3), auth, async (req, res) => {
     res.status(500).json({ msg: "internal server error" });
   }
 });
-router.get("/", auth, async (req, res) => {
+router.put("/", auth, async (req, res) => {
   try {
+    // return console.log(req.body.cart[0].product._id);
     let cartItems = await CartItem.find({ user: req.user.id }).populate(
       "product"
     );
+    for (let index = 0; index < req.body.cart.length; index++) {
+      const item = req.body.cart[index];
+      let found = false;
+      for (let index = 0; index < cartItems.length; index++) {
+        const element = cartItems[index];
+        if (element.product._id == item.product._id) {
+          // console.log('found');
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        // console.log('not found');
+        let product = await Product.findById(item.product._id);
+        let cartItem = await CartItem.create({
+          user: req.user.id,
+          color: item.color,
+          size: item.size,
+          product,
+          details: product,
+          unit: (item.unit),
+          quantity: Number(item.quantity),
+          neck: Number(item.neck),
+          overBust: Number(item.overBust),
+          bust: Number(item.bust),
+          vNeckCut: Number(item.vNeckCut),
+          wrist: Number(item.wrist),
+          foreArm: Number(item.foreArm),
+          bicep: Number(item.bicep),
+          aboveKneeToAnkle: Number(item.aboveKneeToAnkle),
+          armHole: Number(item.armHole),
+          shoulderSeam: Number(item.shoulderSeam),
+          armLength: Number(item.armLength),
+          aboveKneeToAnkle: Number(item.aboveKneeToAnkle),
+          neckToAboveHeel: Number(item.neckToAboveHeel),
+          neckToHeel: Number(item.neckToHeel),
+          hips: Number(item.hips),
+          waist: Number(item.waist),
+          underBust: Number(item.underBust),
+          hip: Number(item.hip),
+          waistToAboveKnee: Number(item.waistToAboveKnee),
+          hip: Number(item.hip),
+        });
+        // console.log(cartItem);
+      }
+    }
+    cartItems = await CartItem.find({ user: req.user.id }).populate(
+      "product"
+    );
+    // console.log(cartItems.length);
     // console.log(cartItems);
     res.json({ cartItems });
   } catch (error) {
