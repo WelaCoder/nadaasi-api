@@ -12,7 +12,7 @@ router.get("/", auth, async (req, res) => {
         await mailer.sendMail(
             {
                 from: "info@nadaasi.com",
-                to: "zain.abideen14572@gmail.com",
+                to: user.email,
                 subject: "Verify Email Address",
                 text:
                     // ''
