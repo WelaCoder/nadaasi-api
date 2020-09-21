@@ -183,6 +183,20 @@ router.put("/setBodyType", auth, verify.notAdmin, async (req, res) => {
   }
 });
 
+router.put("/setCountry", auth, verify.notAdmin, async (req, res) => {
+  try {
+    console.log(req.body);
+    const user = await User.findById(req.user.id).select("-password");
+    user.country = req.body.country;
+
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ msg: "Server Error" });
+  }
+});
+
 router.get("/", auth, verify.notAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");

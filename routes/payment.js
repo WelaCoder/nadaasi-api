@@ -16,7 +16,6 @@ router.post("/", auth, async (req, res) => {
     let cart = await CartItem.find({ user: req.user.id }).populate("product");
     let shipping = await Shipping.find({});
     let user = await User.findById(req.user.id);
-    // console.log(user.appliedCoupon);
     let discountAmount = 0;
     let units = 0;
     shipping = shipping[0];

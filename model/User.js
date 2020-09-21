@@ -107,6 +107,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  country: {
+    name: {
+      type: String,
+
+    }
+    , code: {
+      type: String,
+    }
+  },
   date: {
     type: Date,
     default: Date.now,
