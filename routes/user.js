@@ -188,7 +188,7 @@ router.put("/setCountry", auth, verify.notAdmin, async (req, res) => {
     console.log(req.body);
     const user = await User.findById(req.user.id).select("-password");
     user.country = req.body.country;
-
+    user.address = req.body.address;
     await user.save();
     res.json(user);
   } catch (error) {
