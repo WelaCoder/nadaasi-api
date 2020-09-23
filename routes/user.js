@@ -14,21 +14,21 @@ const router = express.Router();
 
 router.post(
   "/signup",
-  [
-    check("firstname", "Firstname is required").not().isEmpty(),
-    check("lastname", "Lastname is required").not().isEmpty(),
-    check("email", "Email is required").isEmail(),
-    check("password", "Password is required").isLength({ min: 6 }),
-  ],
+  // [
+  //   check("firstname", "Firstname is required").not().isEmpty(),
+  //   check("lastname", "Lastname is required").not().isEmpty(),
+  //   check("email", "Email is required").isEmail(),
+  //   check("password", "Password is required").isLength({ min: 6 }),
+  // ],
   async (req, res) => {
     console.log(req.body);
-    const error = validationResult(req);
-    if (!error.isEmpty()) {
-      return res.status(400).json({
-        error: error.array(),
-      });
-    }
-    const { firstname, lastname, inviteCode, email, password } = req.body;
+    // const error = validationResult(req);
+    // if (!error.isEmpty()) {
+    //   return res.status(400).json({
+    //     error: error.array(),
+    //   });
+    // }
+    const { firstname, lastname, inviteCode, email, password, country } = req.body;
     let code = couponCodeGenerator();
     console.log(code);
     let user;
@@ -75,6 +75,7 @@ router.post(
           activites,
           password,
           inviteCode: code,
+          country,
         });
         await inviter[0].save();
       } else {
@@ -84,6 +85,7 @@ router.post(
           email,
           password,
           inviteCode: code,
+          country
         });
       }
       console.log("object");
@@ -187,8 +189,12 @@ router.put("/setCountry", auth, verify.notAdmin, async (req, res) => {
   try {
     console.log(req.body);
     const user = await User.findById(req.user.id).select("-password");
-    user.country = req.body.country;
-    user.address = req.body.address;
+    if (req.body.country) {
+      user.country = req.body.country;
+    }
+    if (req.body.address) {
+      user.address = req.body.address;
+    }
     await user.save();
     res.json(user);
   } catch (error) {
