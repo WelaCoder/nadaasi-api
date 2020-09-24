@@ -30,10 +30,14 @@ router.put('/', auth, async (req, res) => {
                 const product = products[index];
                 if (req.body.discountType == "Amount") {
                     product.sale = req.body.sale;
+                    product.discountType = req.body.discountType;
+                    product.discount = req.body.discount;
                     product.originalPrice = Number(product.price);
                     product.price = Number(product.price - (Number(req.body.discount)));
                 } else {
                     product.sale = req.body.sale;
+                    product.discountType = req.body.discountType;
+                    product.discount = req.body.discount;
                     product.originalPrice = Number(product.price);
                     product.price = Number(product.price - (product.price * Number(req.body.discount) / 100));
                 }
