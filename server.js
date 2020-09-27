@@ -19,6 +19,11 @@ app.get("/payment", (req, res) => {
 
   return res.sendFile(__dirname + "/mynewfile3.html");
 });
+
+app.get('/html', (req, res) => {
+  return res.sendFile('views/mailer.html', { root: __dirname });
+});
+
 app.use(express.json({ extended: true }));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/product", require("./routes/product"));
@@ -35,6 +40,8 @@ app.use('/api/merchantreturn', require('./routes/return'))
 app.use('/api/dressType', require('./routes/dressType'))
 app.use('/api/verify', require('./routes/verify'))
 
+
+
 app.listen(PORT, () => {
-  console.log(`Your Server is runing on ${PORT} post `);
+  console.log(`Your Server is runing on ${PORT} port `);
 });

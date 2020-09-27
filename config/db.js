@@ -12,7 +12,7 @@ const connectDB = async () => {
       useFindAndModify: false,
     });
     console.log("Database connected ....");
-    // seed();
+    seed();
   } catch (error) {
     console.error(error);
     process.exit(1);
