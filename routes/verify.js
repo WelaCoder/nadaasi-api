@@ -5,21 +5,20 @@ const auth = require("../middleware/auth");
 const Coupon = require("../model/Coupon");
 const config = require("config");
 const mailer = require('../config/mailer');
+const verifymail = require("../config/verifymail");
 router.get("/", auth, async (req, res) => {
     try {
         var user = await User.findById(req.user.id);
         console.log(user.email);
+        let verifyLink = `${req.protocol + "://" + req.headers.host}/api/verify/` +
+            user._id +
+            "/";
         await mailer.sendMail(
             {
                 from: "info@nadaasi.com",
                 to: user.email,
                 subject: "Verify Email Address",
-                text:
-                    // ''
-                    `click the link below to verify your email address
-                ${req.protocol + "://" + req.headers.host}/api/verify/` +
-                    user._id +
-                    "/"
+                html: verifymail(verifyLink),
 
             },
         );
