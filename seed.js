@@ -29,11 +29,7 @@ module.exports = async () => {
     // }
     await mailer.sendMail(
         {
-            attachments: [{
-                filename: 'logo.jpg',
-                path: `${__dirname}/client/public/uploads/logo.png`,
-                cid: 'nadaasi' //same cid value as in the html img src
-            }],
+
             from: "info@nadaasi.com",
             to: 'geekykoder@gmail.com',
             subject: "Verify Email Address",
@@ -202,7 +198,7 @@ module.exports = async () => {
           <div class="container d-flex justify-content-between align-items-center">
               <div>
                   <a href="http://nadaasi.com">
-                      <img class='nadaasi-icon' src="http://localhost:3001/uploads/logo.png" alt="faccebok">
+                      <img class='nadaasi-icon' src="http://nadassi-api.herokuapp.com/uploads/logo.png" alt="faccebok">
                   </a>
               </div>
               <div>
