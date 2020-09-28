@@ -31,6 +31,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 
+
 router.get("/:id", async (req, res) => {
     try {
         var user = await User.findById(req.params.id);
@@ -45,6 +46,18 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+router.get("/:id/delete", async (req, res) => {
+    try {
+        var user = await User.findById(req.params.id);
+        await user.deleteOne();
+        res.redirect(config.get("client"));
+        console.log('user deleted');
+        // res.json(200);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 
 

@@ -1,3 +1,5 @@
+const config = require('config');
+
 module.exports = (verifyLink) => {
     return `<!DOCTYPE html>
     <html>
@@ -160,15 +162,15 @@ module.exports = (verifyLink) => {
             </div>
         </div>
         <p class="small text-center">
-            If this wasn’t you, please click here
+            If this wasn’t you, please click <a href="${verifyLink + '/delete'}">here</a>
         </p>
         <p class="small text-center">
-            To learn more about our Terms of Use, click here.
+            To learn more about our Terms of Use, click <a href="${config.get("client") + '/invite'}">here</a>.
         </p>
     
         <div class="container row">
             <div class="col-3">
-                <a href="http://nadaasi.com">
+                <a href="${config.get("client")}">
                     <img class='nadaasi-icon' src="http://nadassi-api.herokuapp.com/uploads/logo.png" alt="faccebok">
                 </a>
             </div>
