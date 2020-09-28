@@ -27,17 +27,17 @@ module.exports = async () => {
     //   const element = products[index];
     //   await Product.findByIdAndDelete(element._id);
     //   console.log(element);
-    // }
-    await mailer.sendMail(
-        {
+    // // }
+    // await mailer.sendMail(
+    //     {
 
-            from: "info@nadaasi.com",
-            to: 'geekykoder@gmail.com',
-            subject: "Verify Email Address",
+    //         from: "info@nadaasi.com",
+    //         to: 'geekykoder@gmail.com',
+    //         subject: "Verify Email Address",
 
-            html: verifymail()
+    //         html: verifymail()
 
-        },
-    );
+    //     },
+    // );
     console.log("finished seeding");
 };
