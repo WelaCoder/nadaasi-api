@@ -22,6 +22,16 @@ const OrderSchema = new mongoose.Schema({
       required: true,
     },
   },
+  manufacturer: {
+    email: {
+      type: String,
+
+    },
+    name: {
+      type: String,
+
+    },
+  },
   email: {
     type: String,
   },

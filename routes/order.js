@@ -1,13 +1,15 @@
 const router = require("express").Router();
 const config = require("config");
 const KlarnaV3 = require("@crystallize/node-klarna/v3");
-
+const mailer = require('../config/mailer');
 const Product = require("../model/Product");
 const Order = require("../model/Order");
 const auth = require("../middleware/auth");
 const Review = require("../model/Review");
 const User = require("../model/User");
 const verify = require("../middleware/verify");
+const orderDetails = require("../config/orderDetails");
+
 
 // router.post("/", upload.array("images", 3), async (req, res) => {
 //   try {
@@ -178,7 +180,22 @@ router.post("/:id/captureOrder", auth, verify.isAdmin, async (req, res) => {
 
     let order = await Order.findById(req.params.id);
 
-    order.status = req.body.status
+    order.status = req.body.status;
+    if (order.status == "Accepted" && order.manufacturer.name == null) {
+      console.log('sending mail');
+      order.manufacturer = req.body.manufacturer;
+      mailer.sendMail(
+        {
+          from: "info@nadaasi.com",
+          to: req.body.manufacturer.email,
+          subject: "You have a new Order",
+          html: orderDetails(order),
+
+        },
+      );
+      console.log('mail sent');
+    }
+    console.log(order.manufacturer);
     await order.save();
 
     res.json(order);

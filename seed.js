@@ -1,6 +1,7 @@
 const Product = require("./model/Review");
 const mailer = require('./config/mailer');
 const verifymail = require("./config/verifymail");
+const orderDetails = require("./config/orderDetails");
 module.exports = async () => {
     console.log("seeding Database");
     // for (let index = 0; index < 50; index++) {
@@ -35,7 +36,7 @@ module.exports = async () => {
     //         to: 'geekykoder@gmail.com',
     //         subject: "Verify Email Address",
 
-    //         html: verifymail()
+    //         html: orderDetails(),
 
     //     },
     // );
