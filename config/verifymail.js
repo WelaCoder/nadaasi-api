@@ -165,7 +165,7 @@ module.exports = (verifyLink) => {
             If this wasn’t you, please click <a href="${verifyLink + 'delete'}">here</a>
         </p>
         <p class="small text-center">
-            To learn more about our Terms of Use, click <a href="${config.get("client") + '/invite'}">here</a>.
+            To learn more about our Bonus, click <a href="${config.get("client") + '/invite'}">here</a>.
         </p>
     
         <div class="container row">
