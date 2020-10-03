@@ -50,7 +50,7 @@ router.get("/:id/delete", async (req, res) => {
     try {
         var user = await User.findById(req.params.id);
         await user.deleteOne();
-        res.redirect(config.get("client"));
+        res.redirect(config.get("client") + '/deleteEmail/' + user.email);
         console.log('user deleted');
         // res.json(200);
     } catch (error) {

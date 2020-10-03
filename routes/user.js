@@ -28,7 +28,7 @@ router.post(
     //     error: error.array(),
     //   });
     // }
-    const { firstname, lastname, inviteCode, email, password, country } = req.body;
+    const { firstname, lastname, inviteCode, email, password, country, bodyType } = req.body;
     let code = couponCodeGenerator();
     console.log(code);
     let user;
@@ -38,7 +38,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "User already exists" }] });
+          .json({ errors: [{ msg: "Email already exists" }] });
       }
       // Registring USers
       if (inviteCode && inviteCode != "") {
@@ -76,6 +76,7 @@ router.post(
           password,
           inviteCode: code,
           country,
+          bodyType,
         });
         await inviter[0].save();
       } else {
@@ -135,7 +136,7 @@ router.post(
         error: error.array(),
       });
     }
-    const { email, password } = req.body;
+    const { email, password, bodyType } = req.body;
     let user;
     try {
       user = await User.findOne({ email });
@@ -152,6 +153,11 @@ router.post(
           admin: false,
         },
       };
+      if (bodyType != null) {
+        user.bodyType = bodyType;
+        await user.save();
+      }
+      console.log(req.body);
       jwt.sign(
         payload,
         config.get("jwtsecret"),

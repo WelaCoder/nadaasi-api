@@ -131,7 +131,7 @@ module.exports = (verifyLink) => {
     </head>
     
     <body>
-        <h1 style="font-size: 2.6rem; font-weight: bold;" class="display-4 text-center">Verify Your Email</h1>
+        <h1 style="font-size: 2.6rem; font-weight: bold;color: black;" class="display-4 text-center">Verify Your Email</h1>
         <div class="d-flex justify-content-center align-items-center">
             <div class="col-10">
                 <hr>
@@ -143,7 +143,7 @@ module.exports = (verifyLink) => {
     
         <div style="display: table; margin: auto; margin-bottom: 20px;">
             <a href='${verifyLink}' class="text-center btn btn-lg "
-                style="background-color: #fd5068;display: table-cell; text-align: center;  color: white; border-radius: 0; font-size: 1rem; font-weight: 300;">
+                style="background-color: black;display: table-cell; text-align: center;  color: white; border-radius: 0; font-size: 1rem; font-weight: 300;">
                 VERIFY NOW
             </a>
         </div>
