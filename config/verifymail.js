@@ -169,12 +169,12 @@ module.exports = (verifyLink) => {
         </p>
     
         <div class="container row">
-            <div class="col-3">
+            <div class="col-4">
                 <a href="${config.get("client")}">
                     <img class='nadaasi-icon' src="http://nadassi-api.herokuapp.com/uploads/logo.png" alt="faccebok">
                 </a>
             </div>
-            <div class="col-5 text-center">
+            <div class="col-4 text-center">
                 Follow Us
             </div>
             <div class="col-4 ">

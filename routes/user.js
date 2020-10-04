@@ -86,7 +86,8 @@ router.post(
           email,
           password,
           inviteCode: code,
-          country
+          country,
+          bodyType,
         });
       }
       console.log("object");

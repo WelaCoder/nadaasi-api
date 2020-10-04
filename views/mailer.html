@@ -638,7 +638,7 @@
 </head>
 
 <body>
-    <h1 style="font-size: 2.6rem; font-weight: bold;" class="display-4 text-center">Verify Your Email</h1>
+    <h1 style="font-size: 2.6rem; font-weight: bold;color: black;" class="display-4 text-center">Verify Your Email</h1>
     <div class="d-flex justify-content-center align-items-center">
         <div class="col-10">
             <hr>
@@ -649,8 +649,8 @@
 
 
     <div style="display: table; margin: auto; margin-bottom: 20px;">
-        <a class="text-center btn btn-lg "
-            style="background-color: #fd5068;display: table-cell; text-align: center;  color: white; border-radius: 0; font-size: 1rem; font-weight: 300;">
+        <a href='${verifyLink}' class="text-center btn btn-lg "
+            style="background-color: black;display: table-cell; text-align: center;  color: white; border-radius: 0; font-size: 1rem; font-weight: 300;">
             VERIFY NOW
         </a>
     </div>
@@ -660,7 +660,7 @@
     <p class="text-center small">Or paste this link in your browser</p>
     <d class="flex justify-content-center align-items-center">
         <div class="text-center">
-            <a href="https://www.google.com">google.com</a>
+            <a href="${verifyLink}">${verifyLink}</a>
         </div>
     </d>
     <div class="d-flex justify-content-center align-items-center">
@@ -669,19 +669,19 @@
         </div>
     </div>
     <p class="small text-center">
-        If this wasn’t you, please click here
+        If this wasn’t you, please click <a href="${verifyLink + 'delete'}">here</a>
     </p>
     <p class="small text-center">
-        To learn more about our Terms of Use, click here.
+        To learn more about our Bonus, click <a href="${config.get(" client") + '/invite' }">here</a>.
     </p>
 
     <div class="container row">
-        <div class="col-3">
-            <a href="http://nadaasi.com">
+        <div class="col-4">
+            <a href="${config.get(" client")}">
                 <img class='nadaasi-icon' src="http://nadassi-api.herokuapp.com/uploads/logo.png" alt="faccebok">
             </a>
         </div>
-        <div class="col-5 text-center">
+        <div class="col-4 text-center">
             Follow Us
         </div>
         <div class="col-4 ">
