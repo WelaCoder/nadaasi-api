@@ -92,9 +92,9 @@ router.post("/", auth, async (req, res) => {
     // console.log(discountAmount / units);
 
     const client = new KlarnaV3({
-      testDrive: true,
-      username: "PK06420_1338d8456309",
-      password: "jxgy2sGZnnLR7cuu",
+      testDrive: config.get("testDrive"),
+      username: config.get("klarnaUsername"),
+      password: config.get("klarnaPassword"),
     });
     // console.log(shipping);
     // console.log(shippingCost);
@@ -162,7 +162,7 @@ router.post("/", auth, async (req, res) => {
       );
     }
     console.log(success);
-    // console.log(error);
+    console.log(error);
     res.json({ success });
   } catch (error) {
     console.log(error);

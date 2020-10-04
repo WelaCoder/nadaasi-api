@@ -26,7 +26,7 @@ router.get("/", auth, async (req, res) => {
     });
     let placedOrders = [];
     const client = new KlarnaV3({
-      testDrive: true,
+      testDrive: config.get("testDrive"),
       username: config.get("klarnaUsername"),
       password: config.get("klarnaPassword"),
     });
