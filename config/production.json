@@ -1,10 +1,10 @@
 {
-  "MongoURL": "mongodb+srv://dbUser:dbUser@cluster0-zofxz.mongodb.net/test?retryWrites=true&w=majority",
+  "MongoURL": "mongodb+srv://dbUser:dbUser@cluster0.secnz.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority",
   "jwtsecret": "pakistan",
   "clientId": "9967d4adecc15d39d8fd",
   "clientSecret": "8d7c3d7ca73b80ffeefe0e8956357917b9f4fc18",
   "domain": "http://localhost:3000",
-  "client": "https://nadaasi-client.herokuapp.com",
+  "client": "proud-quasar-269120.appspot.com",
   "api": "http://localhost:5000",
   "klarnaUsername": "K620679_f6b5bd995cb0",
   "klarnaPassword": "Xl86Fb0EJ3iNRKa2",
