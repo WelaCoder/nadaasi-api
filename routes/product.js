@@ -4,7 +4,7 @@ const Product = require("../model/Product");
 const DressType = require("../model/DressType");
 const auth = require("../middleware/auth");
 const verify = require("../middleware/verify");
-router.post("/", upload.array("images", 3), async (req, res) => {
+router.post("/", upload.array("images", 10), async (req, res) => {
   try {
     var dressType = await DressType.findOne({ value: req.body.dressType });
     console.log(dressType);

@@ -175,10 +175,11 @@ module.exports = (verifyLink) => {
                 </a>
             </div>
             <div class="col-4 text-center">
-                Follow Us
+             
             </div>
             <div class="col-4 ">
                 <div style="display: table; margin: auto;">
+                <p style="display: table-cell; margin-right: 20px; padding-right: 20px;" class="">Follow Us</p>
                     <a style="display: table-cell;" href="https://www.facebook.com/nadaasidresses/"><img
                             class='follow-icon-facebook' src="http://nadassi-api.herokuapp.com/uploads/facebook.png"
                             alt="faccebok"></a>

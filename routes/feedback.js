@@ -2,17 +2,30 @@ const express = require('express');
 const router = express.Router();
 
 const Feedback = require('../model/Feedback');
+const Review = require('../model/Review');
 
 const auth = require('../middleware/auth');
 const verify = require('../middleware/verify');
 const check = require('../middleware/check')
 
-
-router.post('/', auth, check.notAdmin, async (req, res) => {
+const mailer = require('../config/mailer');
+const contactMail = require("../config/contactMail");
+router.post('/', async (req, res) => {
     const { name, subject, email, message, phone } = req.body;
     try {
         const feedback = new Feedback({ name, subject, email, message, phone });
+        console.log('sending mail');
+
         await feedback.save();
+        await mailer.sendMail(
+            {
+                from: "info@nadaasi.com",
+                to: "geekykoder@gmail.com",
+                subject: "You have a new message",
+                html: contactMail(feedback),
+            },
+        );
+        console.log('contact us mail sent');
         res.json(feedback);
     } catch (error) {
         console.error(error);
@@ -21,7 +34,7 @@ router.post('/', auth, check.notAdmin, async (req, res) => {
 });
 router.get('/', auth, verify.isAdmin, async (req, res) => {
     try {
-        const feedback = await Feedback.find().sort({ date: -1 });
+        const feedback = await Review.find().sort({ date: -1 });
         res.json(feedback);
     } catch (error) {
         console.error(error);

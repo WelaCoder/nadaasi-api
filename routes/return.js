@@ -46,4 +46,16 @@ router.patch('/:rqid', auth, verify.isAdmin, async (req, res) => {
     }
 });
 
+
+router.get('/:rqid', auth, verify.isAdmin, async (req, res) => {
+    try {
+        console.log(req.body);
+        const merchantReturn = await MerchantReturn.findById(req.params.rqid);
+        res.json(merchantReturn);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Server error');
+    }
+});
+
 module.exports = router;

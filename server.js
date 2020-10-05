@@ -21,7 +21,7 @@ app.get("/payment", (req, res) => {
 });
 
 app.get('/html', (req, res) => {
-  return res.sendFile('views/mailer.html', { root: __dirname });
+  return res.sendFile('views/order.html', { root: __dirname });
 });
 
 app.use(express.json({ extended: true }));
