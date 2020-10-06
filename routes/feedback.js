@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
         await mailer.sendMail(
             {
                 from: "info@nadaasi.com",
-                to: "geekykoder@gmail.com",
+                to: "info@nadaasi.com",
                 subject: "You have a new message",
                 html: contactMail(feedback),
             },
