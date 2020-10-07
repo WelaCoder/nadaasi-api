@@ -47,7 +47,7 @@ router.get("/", auth, async (req, res) => {
               product.stock -= p.quantity;
               if (product.stock == 0) {
                 product.inStock = false;
-                product.stock = null;
+                // product.stock = null;
               }
               await product.save();
             }

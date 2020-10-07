@@ -30,9 +30,9 @@ router.post("/", upload.array("images", 10), async (req, res) => {
       price: req.body.price,
       originalPrice: req.body.price,
       name: req.body.name,
-      stock: req.body.stock,
+      stock: req.body.stock == null || req.body.stock == 'null' ? 0 : req.body.stock,
       inStock: req.body.inStock,
-      useStock: req.body.stock != "",
+      useStock: req.body.stock != "" && req.body.stock != 'null' && req.body.stock != null,
       dressColor: req.body.color.split(","),
       dressSize: req.body.size.split(","),
       bodyType: req.body.bodyType.split(","),
@@ -50,7 +50,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 router.post("/:id", upload.array("images", 10), async (req, res) => {
   try {
     var dressType = await DressType.findOne({ value: req.body.dressType });
-    console.log(dressType);
+    console.log(req.body.stock == null || req.body.stock == 'null' ? 'tre' : 'false');
     if (dressType == null) {
       await DressType.create({ label: req.body.dressType, value: req.body.dressType })
     }
@@ -77,9 +77,9 @@ router.post("/:id", upload.array("images", 10), async (req, res) => {
       price: req.body.price,
       originalPrice: req.body.price,
       name: req.body.name,
-      stock: req.body.stock,
+      stock: req.body.stock == null || req.body.stock == 'null' ? 0 : req.body.stock,
       inStock: req.body.inStock,
-      useStock: req.body.stock != "",
+      useStock: req.body.stock != "" && req.body.stock != 'null' && req.body.stock != null,
       dressColor: req.body.color.split(","),
       dressSize: req.body.size.split(","),
       bodyType: req.body.bodyType.split(","),
