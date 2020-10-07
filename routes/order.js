@@ -41,6 +41,17 @@ router.get("/", auth, async (req, res) => {
         console.log(res);
         if (success) {
           let user = await User.findById(req.user.id);
+          element.products.forEach(async (p) => {
+            let product = await Product.findById(p.details._id);
+            if (product.useStock) {
+              product.stock -= p.quantity;
+              if (product.stock == 0) {
+                product.inStock = false;
+                product.stock = null;
+              }
+              await product.save();
+            }
+          });
           if (element.coupon) {
             for (let index = 0; index < user.vouchers.length; index++) {
               const voucher = user.vouchers[index];

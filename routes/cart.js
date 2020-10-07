@@ -10,6 +10,9 @@ router.post("/", upload.array("images", 3), auth, async (req, res) => {
     console.log(req.body);
     var images = [];
     let product = await Product.findById(req.body._id);
+    if ((product.useStock && req.body.quantity > product.stock) || !product.inStock) {
+      return res.status(400).json({ msg: "internal server error" });
+    }
     let cartItem = await CartItem.create({
       user: req.user.id,
       color: req.body.color,
@@ -66,35 +69,37 @@ router.put("/", auth, async (req, res) => {
       if (!found) {
         // console.log('not found');
         let product = await Product.findById(item.product._id);
-        let cartItem = await CartItem.create({
-          user: req.user.id,
-          color: item.color,
-          size: item.size,
-          product,
-          details: product,
-          unit: (item.unit),
-          quantity: Number(item.quantity),
-          neck: Number(item.neck),
-          overBust: Number(item.overBust),
-          bust: Number(item.bust),
-          vNeckCut: Number(item.vNeckCut),
-          wrist: Number(item.wrist),
-          foreArm: Number(item.foreArm),
-          bicep: Number(item.bicep),
-          aboveKneeToAnkle: Number(item.aboveKneeToAnkle),
-          armHole: Number(item.armHole),
-          shoulderSeam: Number(item.shoulderSeam),
-          armLength: Number(item.armLength),
-          aboveKneeToAnkle: Number(item.aboveKneeToAnkle),
-          neckToAboveHeel: Number(item.neckToAboveHeel),
-          neckToHeel: Number(item.neckToHeel),
-          hips: Number(item.hips),
-          waist: Number(item.waist),
-          underBust: Number(item.underBust),
-          hip: Number(item.hip),
-          waistToAboveKnee: Number(item.waistToAboveKnee),
-          hip: Number(item.hip),
-        });
+        if (!((product.useStock && item.quantity > product.stock) || !product.inStock)) {
+          let cartItem = await CartItem.create({
+            user: req.user.id,
+            color: item.color,
+            size: item.size,
+            product,
+            details: product,
+            unit: (item.unit),
+            quantity: Number(item.quantity),
+            neck: Number(item.neck),
+            overBust: Number(item.overBust),
+            bust: Number(item.bust),
+            vNeckCut: Number(item.vNeckCut),
+            wrist: Number(item.wrist),
+            foreArm: Number(item.foreArm),
+            bicep: Number(item.bicep),
+            aboveKneeToAnkle: Number(item.aboveKneeToAnkle),
+            armHole: Number(item.armHole),
+            shoulderSeam: Number(item.shoulderSeam),
+            armLength: Number(item.armLength),
+            aboveKneeToAnkle: Number(item.aboveKneeToAnkle),
+            neckToAboveHeel: Number(item.neckToAboveHeel),
+            neckToHeel: Number(item.neckToHeel),
+            hips: Number(item.hips),
+            waist: Number(item.waist),
+            underBust: Number(item.underBust),
+            hip: Number(item.hip),
+            waistToAboveKnee: Number(item.waistToAboveKnee),
+            hip: Number(item.hip),
+          });
+        }
         // console.log(cartItem);
       }
     }
@@ -124,7 +129,9 @@ router.delete("/:id", async (req, res) => {
 router.post("/:id/updateQuantity", async (req, res) => {
   try {
     let cartItem = await CartItem.findById(req.params.id).populate("product");
-    cartItem.quantity = req.body.quantity;
+    if ((cartItem.product.inStock) && !(cartItem.quantity > cartItem.product.stock && cartItem.product.useStock)) {
+      cartItem.quantity = req.body.quantity;
+    }
     console.log(cartItem);
     await cartItem.save();
     res.json({ cartItem });

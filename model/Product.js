@@ -99,5 +99,13 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  stock: {
+    type: Number,
+    default: 0,
+  },
+  useStock: {
+    type: Boolean,
+    default: false,
+  },
 });
 module.exports = Product = mongoose.model("product", ProductSchema);
