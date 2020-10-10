@@ -94,7 +94,10 @@ router.post("/:id", upload.array("images", 10), async (req, res) => {
 });
 router.get("/", async (req, res) => {
   try {
-    let products = await Product.find({});
+    let products = await Product.find({ inStock: true });
+    let i = 0;
+    products.map(p => p.inStock ? i++ : i = i);
+    console.log(i);
     res.json({ products: products.reverse() });
   } catch (error) {
     console.log(error);

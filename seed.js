@@ -1,9 +1,10 @@
-const Product = require("./model/Review");
+const Product = require("./model/Product");
 const mailer = require('./config/mailer');
 const verifymail = require("./config/verifymail");
 const orderDetails = require("./config/orderDetails");
+const download = require('./config/download')
 module.exports = async () => {
-    console.log("seeding Database");
+    // console.log("seeding Database");
     // for (let index = 0; index < 50; index++) {
     //   const element = await Product.create({
     //     images: ["1598002071931.jpeg"],
@@ -24,6 +25,13 @@ module.exports = async () => {
     //   console.log(element);
     // }
     // let products = await Product.find({});
+    // products.forEach(async (p) => {
+    //     p.images.forEach(async (i) => {
+    //         download(`https://nadaasi-api.uc.r.appspot.com/uploads/${i}`, i, () => {
+    //             console.log('downloaded ' + i);
+    //         });
+    //     })
+    // })
     // for (let index = 0; index < products.length; index++) {
     //   const element = products[index];
     //   await Product.findByIdAndDelete(element._id);
@@ -40,5 +48,8 @@ module.exports = async () => {
 
     //     },
     // );
-    console.log("finished seeding");
+    // download('https://www.google.com/images/srpr/logo3w.png', 'google.png', function () {
+    //     console.log('done');
+    // });
+    // console.log("finished seeding");
 };
