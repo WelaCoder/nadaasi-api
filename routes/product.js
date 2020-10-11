@@ -4,6 +4,7 @@ const Product = require("../model/Product");
 const DressType = require("../model/DressType");
 const auth = require("../middleware/auth");
 const verify = require("../middleware/verify");
+const User = require("../model/User");
 router.post("/", upload.array("images", 10), async (req, res) => {
   try {
     var dressType = await DressType.findOne({ value: req.body.dressType });
@@ -94,6 +95,10 @@ router.post("/:id", upload.array("images", 10), async (req, res) => {
 });
 router.get("/", async (req, res) => {
   try {
+    if (req.headers.host == "admin.nadaasi.com") {
+      let products = await Product.find({});
+      return res.json({ products: products.reverse() });
+    }
     let products = await Product.find({ inStock: true });
     let i = 0;
     products.map(p => p.inStock ? i++ : i = i);
