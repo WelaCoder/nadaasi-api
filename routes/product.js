@@ -96,7 +96,7 @@ router.post("/:id", upload.array("images", 10), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     
-    let products = await Product.find({ inStock: true });
+    let products = await Product.find({ inStock: true ,isActive: true,});
     let i = 0;
     products.map(p => p.inStock ? i++ : i = i);
     console.log(i);
@@ -115,7 +115,9 @@ router.get("/", async (req, res) => {
 router.get("/admin", async (req, res) => {
   try {
     
-    let products = await Product.find({});
+    let products = await Product.find({
+      isActive: true,
+    });
     let i = 0;
     products.map(p => p.inStock ? i++ : i = i);
     console.log(i);
@@ -140,6 +142,18 @@ router.put("/:id", auth, verify.isAdmin, async (req, res) => {
 router.get("/:id", auth, verify.isAdmin, async (req, res) => {
   try {
     let product = await Product.findById(req.params.id);
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Server error");
+  }
+});
+router.delete('/:id',async (req, res) => {
+  try {
+    console.log('delte');
+    let product = await Product.findById(req.params.id);
+    product.isActive = false;
+    await product.save();
     res.json(product);
   } catch (error) {
     console.error(error);

@@ -4,6 +4,12 @@ const verifymail = require("./config/verifymail");
 const orderDetails = require("./config/orderDetails");
 const download = require('./config/download')
 module.exports = async () => {
+    // let products = await Product.find({});
+    // for (const product of products) {
+    //     product.isActive = true;
+    //     await product.save();
+
+    // }
     // console.log("seeding Database");
     // for (let index = 0; index < 50; index++) {
     //   const element = await Product.create({
@@ -51,5 +57,5 @@ module.exports = async () => {
     // download('https://www.google.com/images/srpr/logo3w.png', 'google.png', function () {
     //     console.log('done');
     // });
-    // console.log("finished seeding");
+    console.log("finished seeding");
 };

@@ -99,6 +99,10 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  isActive: {
+    type: Boolean,
+    default: true, 
+  },
   stock: {
     type: Number,
     default: 0,
