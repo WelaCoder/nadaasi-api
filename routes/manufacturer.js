@@ -7,6 +7,12 @@ const config = require("config");
 const verify = require('../middleware/verify')
 router.post("/", auth, verify.isAdmin, async (req, res) => {
     try {
+        let found = await Manufacturer.findOne({email: req.body.email});
+        if (found)
+        {
+            console.log(found);
+            return res.status(400).json({ message: "Email already exists..." });
+        }
 
         console.log(req.body);
         let manufacturer = Manufacturer.create(req.body);

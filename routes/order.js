@@ -111,13 +111,95 @@ router.get("/", auth, async (req, res) => {
   }
 });
 router.get("/admin", auth, verify.isAdmin, async (req, res) => {
+
   try {
-    const order = await Order.find().sort({ date: -1 });
-    res.json(order);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Server error");
-  }
+    let orders =  await Order.find().sort({ date: -1 });
+    console.log(orders);
+      let placedOrders = [];
+      const client = new KlarnaV3({
+        testDrive: config.get("testDrive"),
+        username: config.get("klarnaUsername"),
+        password: config.get("klarnaPassword"),
+      });
+      for (let index = 0; index < orders.length; index++) {
+        const element = orders[index];
+        if (element.isPlaced) {
+          placedOrders.push(element);
+        } else {
+          const res = await client.getOrder(element.orderId);
+          const { success, order } = res;
+          console.log("in get order");
+          console.log(res);
+          if (success) {
+            let user = await User.findById(element.user._id);
+            element.products.forEach(async (p) => {
+              let product = await Product.findById(p.details._id);
+              if (product.useStock) {
+                product.stock -= p.quantity;
+                if (product.stock == 0) {
+                  product.inStock = false;
+                  // product.stock = null;
+                }
+                await product.save();
+              }
+            });
+            if (element.coupon) {
+              for (let index = 0; index < user.vouchers.length; index++) {
+                const voucher = user.vouchers[index];
+                if (voucher.code == element.coupon.code) {
+                  console.log(element.coupon);
+  
+                  user.vouchers[index].used = true;
+                  user.vouchers[index].isActive = false;
+                }
+              }
+            }
+            let points = 0;
+            for (let index = 0; index < element.products.length; index++) {
+              const orderProduct = element.products[index];
+              points += orderProduct.quantity;
+            }
+            user.points += points;
+            user.activities.push({
+              text: `Your earned ${points} points for purchasing ${points} dresses.`,
+            });
+            user.balance -= element.balanceDiscount;
+            // console.log(order);
+            const { acknowledgeOrderSuccess } = await client.acknowledgeOrder(
+              element.orderId
+            );
+            const captureOrder = await client.captureOrder(
+              element.orderId
+            );
+            if (user.inviter._id) {
+              if (!user.inviter.rewarded) {
+                let inviter = await User.findById(user.inviter._id);
+                inviter.balance += 20;
+                inviter.activities.push({
+                  text: `Your friend ${user.firstname + " " + user.lastname
+                    } made his first purchase and you received 20€.`,
+                });
+                await inviter.save();
+                user.inviter.rewarded = true;
+              }
+            }
+            await user.save();
+            placedOrders.push(element);
+            element.isPlaced = true;
+            element.isAcknowledged = true;
+            await element.save();
+          } else {
+            await Order.findByIdAndDelete(element._id);
+          }
+        }
+      }
+  
+      // console.log(placedOrders);
+      res.json( placedOrders.reverse() );
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 router.get("/:id", auth, async (req, res) => {
   try {
