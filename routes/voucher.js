@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const upload = require("../upload");
 const User = require("../model/User");
+const AppliedCoupon = require("../model/AppliedCoupon")
 const auth = require("../middleware/auth");
 const Coupon = require("../model/Coupon");
 const couponCodeGenerator = require("../utils/couponCodeGenerator");
@@ -8,6 +9,7 @@ const couponCodeGenerator = require("../utils/couponCodeGenerator");
 router.post("/applyCoupon/", auth, async (req, res) => {
   try {
     // let testimonials = await Review.find({ rating: 5 });
+    let appliedCoupon
     let user = await User.findById(req.user.id);
     let coupon = null;
     let id;
@@ -33,10 +35,24 @@ router.post("/applyCoupon/", auth, async (req, res) => {
         discountType: coupon.discountType,
         id: null
       };
+      appliedCoupon = await AppliedCoupon.findOne({ couponCode: req.body.code })
+      if (!appliedCoupon) {
+        appliedCoupon = new AppliedCoupon({
+          couponCode : req.body.code
+        })
+      }
+      // console.log(appliedCoupon)
+      await appliedCoupon.save();
+      
       await user.save();
+      if (appliedCoupon.isUsed === true) {
+        return res.json({ isUsed : true ,coupon  })
+      } else {
+        return res.json({isUsed : false ,coupon})
+      }
     }
     // console.log(coupon);
-    res.json({ coupon });
+    return res.json({coupon})
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });

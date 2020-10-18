@@ -5,6 +5,7 @@ const router = express.Router();
 const KlarnaV3 = require("@crystallize/node-klarna/v3");
 const auth = require("../middleware/auth");
 const CartItem = require("../model/CartItem");
+const AppliedCoupon = require("../model/AppliedCoupon")
 const Order = require("../model/Order");
 const User = require("../model/User");
 const Shipping = require("../model/Shipping");
@@ -13,6 +14,7 @@ const config = require("config");
 
 router.post("/", auth, async (req, res) => {
   try {
+    let applidcoupon
     let cart = await CartItem.find({ user: req.user.id }).populate("product");
     let shipping = await Shipping.find({});
     let user = await User.findById(req.user.id);
@@ -40,6 +42,7 @@ router.post("/", auth, async (req, res) => {
         discountAmount = userBalance * 100;
       }
     } else if (req.body.appliedCoupon) {
+      applidcoupon = await AppliedCoupon.findOne({ couponCode: user.appliedCoupon.code })
       if (user.appliedCoupon.isActive) {
         discountAmount = 0;
         let appliedCoupon = user.appliedCoupon;
@@ -163,6 +166,16 @@ router.post("/", auth, async (req, res) => {
     }
     console.log(success);
     console.log(error);
+    if (applidcoupon) {
+      if (applidcoupon.isUsed === false) {
+        console.log("123")
+    let app = await AppliedCoupon.findOneAndUpdate({couponCode: user.appliedCoupon.code} , {isUsed : true})
+    console.log('object')
+    console.log(app)
+    console.log('object')
+    await app.save()
+      }
+    }
     res.json({ success });
   } catch (error) {
     console.log(error);
@@ -187,3 +200,4 @@ router.get("/:userId", async (req, res) => {
   res.sendFile(__dirname + "/views/" + req.params.userId + ".html");
 });
 module.exports = router;
+
