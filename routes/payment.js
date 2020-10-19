@@ -5,8 +5,8 @@ const router = express.Router();
 const KlarnaV3 = require("@crystallize/node-klarna/v3");
 const auth = require("../middleware/auth");
 const CartItem = require("../model/CartItem");
-const AppliedCoupon = require("../model/AppliedCoupon")
 const Order = require("../model/Order");
+const AppliedCoupon = require("../model/AppliedCoupon")
 const User = require("../model/User");
 const Shipping = require("../model/Shipping");
 const config = require("config");
@@ -17,6 +17,7 @@ router.post("/", auth, async (req, res) => {
     let applidcoupon
     let cart = await CartItem.find({ user: req.user.id }).populate("product");
     let shipping = await Shipping.find({});
+    
     let user = await User.findById(req.user.id);
     let discountAmount = 0;
     let units = 0;
@@ -42,8 +43,18 @@ router.post("/", auth, async (req, res) => {
         discountAmount = userBalance * 100;
       }
     } else if (req.body.appliedCoupon) {
-      applidcoupon = await AppliedCoupon.findOne({ couponCode: user.appliedCoupon.code })
+      // console.log('object')
+      console.log(req.body.appliedCoupon)
+      
+      
+      applidcoupon = user.Usedcoupon.filter(coupon => coupon.couponCode === user.appliedCoupon.code )
+      
+        
+      console.log(applidcoupon)
+      // console.log(object)
       if (user.appliedCoupon.isActive) {
+        
+        
         discountAmount = 0;
         let appliedCoupon = user.appliedCoupon;
         let units = 0;
@@ -53,51 +64,53 @@ router.post("/", auth, async (req, res) => {
         }
         switch (appliedCoupon.discountType) {
           case 'di':
-
+            
             discountAmount = units * appliedCoupon.discount;
             break;
-          case 'pi':
-            discountAmount = 0;
-            for (let index = 0; index < cart.length; index++) {
-              const cartProduct = cart[index];
-              discountAmount += (cartProduct.details.price * appliedCoupon.discount / 100) * cartProduct.quantity
-            }
-            break;
-          case 'fs':
-            discountAmount = 0;
-            shippingCost = 0;
-            break;
-          case 'dst':
-          case 'dt':
-            discountAmount = appliedCoupon.discount;
-            break;
-          default:
-            discountAmount = 0;
-            break;
-        }
-        discountAmount = discountAmount * 100;
-
-        console.log(discountAmount);
-      }
-    } else if (req.body.usePoints) {
-      let units = 0;
-      for (let index = 0; index < cart.length; index++) {
-        const cartProduct = cart[index];
-        units += cartProduct.quantity;
-      }
-      if ((units * 5) <= user.points) {
-        discountAmount = totalAmount
-      } else {
-        return console.log('balance not enough');
-      }
-    }
-    // console.log(discountAmount);
-    // console.log(discountAmount / units);
-
-    const client = new KlarnaV3({
-      testDrive: config.get("testDrive"),
-      username: config.get("klarnaUsername"),
-      password: config.get("klarnaPassword"),
+            case 'pi':
+              discountAmount = 0;
+              for (let index = 0; index < cart.length; index++) {
+                const cartProduct = cart[index];
+                discountAmount += (cartProduct.details.price * appliedCoupon.discount / 100) * cartProduct.quantity
+              }
+              break;
+              case 'fs':
+                discountAmount = 0;
+                shippingCost = 0;
+                break;
+                case 'dst':
+                  case 'dt':
+                    discountAmount = appliedCoupon.discount;
+                    break;
+                    default:
+                      discountAmount = 0;
+                      break;
+                    }
+                    discountAmount = discountAmount * 100;
+                    
+                    console.log(discountAmount);
+                  }else{
+                    return console.log('coupon is already used')
+                  }
+                } else if (req.body.usePoints) {
+                  let units = 0;
+                  for (let index = 0; index < cart.length; index++) {
+                    const cartProduct = cart[index];
+                    units += cartProduct.quantity;
+                  }
+                  if ((units * 5) <= user.points) {
+                    discountAmount = totalAmount
+                  } else {
+                    return console.log('balance not enough');
+                  }
+                }
+                // console.log(discountAmount);
+                // console.log(discountAmount / units);
+                
+                const client = new KlarnaV3({
+                testDrive: config.get("testDrive"),
+                username: config.get("klarnaUsername"),
+                password: config.get("klarnaPassword"),
     });
     // console.log(shipping);
     // console.log(shippingCost);
@@ -166,16 +179,25 @@ router.post("/", auth, async (req, res) => {
     }
     console.log(success);
     console.log(error);
-    if (applidcoupon) {
-      if (applidcoupon.isUsed === false) {
+    if (applidcoupon[0]) {
+      if (applidcoupon[0].isUsed === false) {
         console.log("123")
-    let app = await AppliedCoupon.findOneAndUpdate({couponCode: user.appliedCoupon.code} , {isUsed : true})
+        console.log(user.Usedcoupon)
+        const removeIndex = user.Usedcoupon.findIndex(coupon => coupon.couponCode === user.appliedCoupon.code)
     console.log('object')
-    console.log(app)
-    console.log('object')
-    await app.save()
+        user.Usedcoupon.splice(removeIndex, 1);
+        newcoupon = {
+          isUsed: true,
+          couponCode : user.appliedCoupon.code
+        }
+        user.Usedcoupon.push(newcoupon)
+        console.log(user.Usedcoupon)
+        user.save();
+    // console.log(object)
+    // await app.save()
       }
     }
+    // console.log(object)
     res.json({ success });
   } catch (error) {
     console.log(error);
@@ -200,4 +222,3 @@ router.get("/:userId", async (req, res) => {
   res.sendFile(__dirname + "/views/" + req.params.userId + ".html");
 });
 module.exports = router;
-

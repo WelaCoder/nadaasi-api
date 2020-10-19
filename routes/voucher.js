@@ -1,17 +1,18 @@
 const router = require("express").Router();
 const upload = require("../upload");
 const User = require("../model/User");
-const AppliedCoupon = require("../model/AppliedCoupon")
 const auth = require("../middleware/auth");
 const Coupon = require("../model/Coupon");
+const AppliedCoupon = require("../model/AppliedCoupon")
 const couponCodeGenerator = require("../utils/couponCodeGenerator");
 
 router.post("/applyCoupon/", auth, async (req, res) => {
   try {
     // let testimonials = await Review.find({ rating: 5 });
-    let appliedCoupon
     let user = await User.findById(req.user.id);
     let coupon = null;
+    let appliedCoupon
+    let app;
     let id;
     for (let index = 0; index < user.vouchers.length; index++) {
       const voucher = user.vouchers[index];
@@ -23,6 +24,7 @@ router.post("/applyCoupon/", auth, async (req, res) => {
     }
     if (coupon) {
       user.appliedCoupon = { ...coupon, id };
+
       await user.save();
     } else {
       coupon = await Coupon.findOne({ code: req.body.code });
@@ -35,17 +37,41 @@ router.post("/applyCoupon/", auth, async (req, res) => {
         discountType: coupon.discountType,
         id: null
       };
-      appliedCoupon = await AppliedCoupon.findOne({ couponCode: req.body.code })
-      if (!appliedCoupon) {
-        appliedCoupon = new AppliedCoupon({
-          couponCode : req.body.code
-        })
+      
+      
+      // appliedCoupon = await User.findOne({ user: req.user.id })
+      console.log(user)
+      if (user.Usedcoupon.length > 0) {
+        console.log('12')
+         app = user.Usedcoupon.filter(coupon => coupon.couponCode === req.body.code)
+        console.log('object')
+        console.log(app)
+        if (app.length === 0) {
+          newcoupon = {
+            couponCode : req.body.code
+          }
+          user.Usedcoupon.push(newcoupon)
+          app = user.Usedcoupon.filter(coupon => coupon.couponCode === req.body.code)
+          console.log(user)
       }
-      // console.log(appliedCoupon)
-      await appliedCoupon.save();
+      } else {
+        newcoupon = {
+          couponCode : req.body.code
+        }
+        user.Usedcoupon.push(newcoupon)
+        app = user.Usedcoupon.filter(coupon => coupon.couponCode === req.body.code)
+      }
+      // if (!appliedCoupon) {
+      //   appliedCoupon = new AppliedCoupon({
+      //     user: req.user.id,
+      //     couponCode : req.body.code
+      //   })
+      // }
+      // console.log(appliedCoupon);
       
       await user.save();
-      if (appliedCoupon.isUsed === true) {
+      if (app[0].isUsed === true) {
+        console.log('ture')
         return res.json({ isUsed : true ,coupon  })
       } else {
         return res.json({isUsed : false ,coupon})
@@ -63,7 +89,7 @@ router.post("/applyCoupon/", auth, async (req, res) => {
 router.get("/", auth, async (req, res) => {
   try {
     let user = await User.findById(req.user.id);
-    if (user.points >= 3) {
+    if (s >= 3) {
       user.vouchers.push({
         code: couponCodeGenerator(),
         discount: 100,

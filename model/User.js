@@ -18,12 +18,24 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  Usedcoupon: [ {
+    couponCode: {
+      type: String,
+  },
+  isUsed: {
+      type: Boolean,
+      default : false
+  }
+  }],
   appliedCoupon: {
     name: {
       type: String,
     },
     code: {
       type: String,
+    },
+    isUsed: {
+      type : Boolean
     },
     id: {
       type: Number,
